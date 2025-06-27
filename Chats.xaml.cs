@@ -45,7 +45,7 @@ namespace CyberSecurityChatbot
         public Chats()
         {
             InitializeComponent();
-            _ = AddBotMessageWithTyping("Welcome to your Cybersecurity Assistant!");
+            _ = AddBotMessageWithTyping("Welcome to the Cybersecurity Chatbot!");
             _ = AddBotMessageWithTyping("Before we start, what's your name?");
         }
 
