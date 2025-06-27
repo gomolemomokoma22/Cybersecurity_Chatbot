@@ -14,7 +14,10 @@ namespace CyberSecurityChatbot
             "tell", "about", "me", "what", "how", "is", "your", "can", "help", "define"
         };
 
-        private Dictionary<string, string> memory = new Dictionary<string, string>();
+
+        private Dictionary<string, string> memory = new();
+        private string userName = string.Empty;
+
 
         private string[] questions = {
             "password", "phishing", "browsing", "firewall", "malware", "ransomware",
@@ -39,14 +42,16 @@ namespace CyberSecurityChatbot
             "Ask me anything about cybersecurity: phishing, firewalls, VPNs, and more!"
         };
 
-        private string userName = "";
-        private bool nameAsked = false;
 
         public Chats()
         {
             InitializeComponent();
-            _ = AddBotMessageWithTyping("Welcome to your Cybersecurity Assistant!");
-            _ = AddBotMessageWithTyping("Before we start, what's your name?");
+            _ = AskForUserName();
+        }
+
+        private async Task AskForUserName()
+        {
+            await AddBotMessageWithTyping("Hello! What is your name?");
         }
 
         private async void Send_Click(object sender, RoutedEventArgs e)
@@ -54,24 +59,31 @@ namespace CyberSecurityChatbot
             string userText = UserInput.Text.Trim();
             if (string.IsNullOrWhiteSpace(userText)) return;
 
+            if (userText.ToLower() == "exit")
+            {
+                await AddBotMessageWithTyping($"Goodbye {userName}, stay safe online!");
+                await Task.Delay(1000);
+                new MainWindow().Show();
+                this.Close();
+                return;
+            }
+
             AddUserMessage(userText);
+            chat_history.SaveToHistory("User: " + userText);
 
-            string botResponse;
+            if (string.IsNullOrEmpty(userName))
+            {
+                userName = userText;
+                await AddBotMessageWithTyping($"Welcome, {userName}! How can I help you today?");
+                UserInput.Clear();
+                return;
+            }
 
-            if (!nameAsked)
-            {
-                userName = char.ToUpper(userText[0]) + userText.Substring(1);
-                nameAsked = true;
-                botResponse = $"Nice to meet you, {userName}! How can I help you with cybersecurity today?";
-            }
-            else
-            {
-                chat_history.SaveToHistory($"{userName}: {userText}");
-                botResponse = await ProcessInputAsync(userText);
-                chat_history.SaveToHistory($"Bot: {botResponse}");
-            }
+            string botResponse = await ProcessInputAsync(userText);
 
             await AddBotMessageWithTyping(botResponse);
+            chat_history.SaveToHistory("Bot: " + botResponse);
+
             UserInput.Clear();
         }
 
@@ -80,74 +92,28 @@ namespace CyberSecurityChatbot
             await Task.Delay(1);
             input = input.ToLower().Trim();
 
-            if (input.StartsWith("i'm interested in") || input.StartsWith("im interested in"))
-            {
-                string interest = input.Replace("i'm interested in", "").Replace("im interested in", "").Trim();
-                if (!string.IsNullOrEmpty(interest))
-                {
-                    memory_recall.recall("interest_" + interest, interest);
-                    return $"Great, {userName}! I'll remember that you're interested in {interest}. Stay informed!";
-                }
-            }
-
-            if (input.Contains("worried about"))
-            {
-                string topic = input.Substring(input.IndexOf("worried about") + "worried about".Length).Trim();
-                memory_recall.recall("concern_" + topic, topic);
-                return $"Thanks for sharing, {userName}. You're right to be concerned about {topic}. Stay vigilant!";
-            }
-
-            if (input.Contains("what did i say"))
-            {
-                var interests = memory_recall.GetAllKeys().FindAll(k => k.StartsWith("interest_"));
-                if (interests.Count == 0) return "You haven't mentioned any interests yet.";
-                return $"Earlier you said you're interested in: {string.Join(", ", interests.ConvertAll(k => memory_recall.get(k)))}.";
-            }
-
-            if (input.StartsWith("give me a tip about"))
-            {
-                string topic = input.Replace("give me a tip about", "").Trim();
-                string tip = keyword_recognition.checkKeyword(topic);
-                return !string.IsNullOrEmpty(tip) ? tip : $"Sorry {userName}, I don't have a tip about {topic}.";
-            }
-
-            for (int i = 0; i < questions.Length; i++)
-                if (input == questions[i]) return responses[i];
-
-            string keywordResponse = keyword_recognition.checkKeyword(input);
-            if (!string.IsNullOrEmpty(keywordResponse) && !keywordResponse.StartsWith("I'm not sure"))
-                return keywordResponse;
-
-            string sentimentResponse = sentiment_detector.detectSentiment(input);
-            if (!string.IsNullOrEmpty(sentimentResponse)) return sentimentResponse;
-
-            foreach (var key in memory_recall.GetAllKeys())
-                if (input.Contains(key)) return memory_recall.get(key);
-
-            if (!keyword_recognition.cyberTopic(input))
-                return $"Hmm, {userName}, that doesn’t sound like a cybersecurity question. Try asking about phishing, scams, or VPNs.";
-
             foreach (string word in input.Split(' '))
             {
                 if (ignoreWords.Contains(word)) continue;
                 for (int i = 0; i < questions.Length; i++)
+                {
                     if (word.Contains(questions[i]) || questions[i].Contains(word))
                         return responses[i];
+                }
             }
 
-            return $"Oops {userName}, I couldn't quite get that. Can you rephrase it?";
+            return "Sorry, I couldn't understand. Try rephrasing your cybersecurity question.";
         }
 
         private void AddUserMessage(string message)
         {
-            TextBlock text = new TextBlock
+            ChatPanel.Children.Add(new TextBlock
             {
-                Text = $"You: {message}",
+                Text = $"{userName}: {message}",
                 Foreground = Brushes.White,
                 FontWeight = FontWeights.Bold,
                 Margin = new Thickness(5)
-            };
-            ChatPanel.Children.Add(text);
+            });
         }
 
         private async Task AddBotMessageWithTyping(string message)
@@ -172,7 +138,7 @@ namespace CyberSecurityChatbot
         {
             DispatcherFrame frame = new DispatcherFrame();
             Dispatcher.CurrentDispatcher.BeginInvoke(DispatcherPriority.Background,
-                new DispatcherOperationCallback(delegate (object f)
+                new DispatcherOperationCallback(f =>
                 {
                     ((DispatcherFrame)f).Continue = false;
                     return null;
@@ -182,10 +148,8 @@ namespace CyberSecurityChatbot
 
         private void BackToMain_Click(object sender, RoutedEventArgs e)
         {
-            MainWindow main = new MainWindow();
-            main.Show();
+            new MainWindow().Show();
             this.Close();
         }
     }
 }
-
