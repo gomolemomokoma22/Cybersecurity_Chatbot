@@ -1,0 +1,56 @@
+﻿<Window x:Class="CyberSecurityChatbot.ActivityLog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Activity Log"
+        Height="550" Width="700"
+        Background="#1E1E1E"
+        WindowStartupLocation="CenterScreen">
+    <Grid Margin="10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+
+        <!-- Header -->
+        <TextBlock Text="Chat &amp; Memory Activity"
+                   FontSize="22" FontWeight="Bold"
+                   Foreground="White" Margin="10"
+                   HorizontalAlignment="Center"/>
+
+        <!-- Log Display Tabs -->
+        <TabControl Grid.Row="1" Margin="0,10,0,10" Background="#2D2D2D" Foreground="White">
+            <TabItem Header="Chat History">
+                <Grid Margin="5">
+                    <ListBox x:Name="ChatHistoryList" Background="Black" Foreground="White"/>
+                    <Button Content="Clear History" Click="ClearHistory_Click"
+                            Background="Red" Foreground="White"
+                            Margin="0,10,0,0" Height="30" HorizontalAlignment="Right"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Memory Recall">
+                <Grid Margin="5">
+                    <ListBox x:Name="MemoryList" Background="Black" Foreground="White"/>
+                    <Button Content="Clear Memory" Click="ClearMemory_Click"
+                            Background="Red" Foreground="White"
+                            Margin="0,10,0,0" Height="30" HorizontalAlignment="Right"/>
+                </Grid>
+            </TabItem>
+            <TabItem Header="Action Log">
+                <Grid Margin="5">
+                    <ListBox x:Name="ActionLogList" Background="Black" Foreground="White"/>
+                    <Button Content="Clear Log" Click="ClearActionLog_Click"
+                            Background="Red" Foreground="White"
+                            Margin="0,10,0,0" Height="30" HorizontalAlignment="Right"/>
+                </Grid>
+            </TabItem>
+        </TabControl>
+
+        <!-- Close -->
+        <Button Grid.Row="2" Content="Back to Home"
+                Click="Close_Click"
+                Background="DarkGray" Foreground="White"
+                Width="150" Height="30"
+                HorizontalAlignment="Center"/>
+    </Grid>
+</Window>
