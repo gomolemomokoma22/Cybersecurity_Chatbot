@@ -38,6 +38,13 @@ namespace CyberSecurityChatbot
                 MessageBox.Show("Please enter a task title.", "Missing Title", MessageBoxButton.OK, MessageBoxImage.Warning);
             }
         }
+        private void BackToMain_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow main = new MainWindow();
+            main.Show();
+            this.Close();
+        }
+
 
         private void ClearTasks_Click(object sender, RoutedEventArgs e)
         {
