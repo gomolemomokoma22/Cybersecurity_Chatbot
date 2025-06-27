@@ -2,34 +2,57 @@
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         Title="Cybersecurity Chatbot" Height="500" Width="650"
-        Background="#1E1E1E" WindowStartupLocation="CenterScreen">
+        Background="#1E1E1E" WindowStartupLocation="CenterScreen"
+        ResizeMode="NoResize">
+
     <Grid Margin="10">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
+            <!-- Chat Area -->
             <RowDefinition Height="Auto"/>
+            <!-- Input -->
             <RowDefinition Height="Auto"/>
+            <!-- Back Button -->
         </Grid.RowDefinitions>
 
         <!-- Chat Display -->
-        <ScrollViewer VerticalScrollBarVisibility="Auto" Grid.Row="0">
+        <ScrollViewer Grid.Row="0" VerticalScrollBarVisibility="Auto">
             <StackPanel x:Name="ChatPanel" Margin="5"/>
         </ScrollViewer>
 
         <!-- Input and Send -->
         <StackPanel Grid.Row="1" Orientation="Horizontal" Margin="0,10,0,0">
-            <TextBox x:Name="UserInput" Width="480" Height="30" Margin="0,0,10,0"/>
-            <Button Content="Send" Width="100" Background="#007ACC" Foreground="White"
-                    FontWeight="Bold" Click="Send_Click"/>
+            <TextBox x:Name="UserInput"
+                     Width="480"
+                     Height="30"
+                     FontSize="14"
+                     Background="#2A2A2A"
+                     Foreground="White"
+                     BorderBrush="#444"
+                     Margin="0,0,10,0"
+                     Padding="5"/>
+
+            <Button Content="Send"
+                    Width="100"
+                    Height="30"
+                    Click="Send_Click"
+                    Background="#007ACC"
+                    Foreground="White"
+                    FontWeight="Bold"
+                    BorderBrush="Transparent"/>
         </StackPanel>
 
         <!-- Back Button -->
-        <Button Grid.Row="2" Content="Back to Home"
+        <Button Grid.Row="2"
+                Content="← Back to Home"
                 Click="BackToMain_Click"
                 Margin="0,10,0,0"
                 Width="150"
-                Height="30"
-                Background="DarkGray"
+                Height="35"
+                Background="#444"
                 Foreground="White"
+                FontWeight="Bold"
+                BorderBrush="Transparent"
                 HorizontalAlignment="Center"/>
     </Grid>
 </Window>

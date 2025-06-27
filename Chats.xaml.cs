@@ -34,47 +34,41 @@ namespace CyberSecurityChatbot
 
         private async Task<string> ProcessInputAsync(string input)
         {
-            await Task.Delay(1);
+            await Task.Delay(1); // Prevent compiler warning
+
             input = input.ToLower();
 
-            // NLP Intent simulation
+            // NLP-based quick actions
             if (input.Contains("start quiz") || input.Contains("take quiz") || input.Contains("launch quiz"))
-            {
                 return "Sure! Opening the quiz game for you... 🚀";
-            }
-            else if (input.Contains("add task") || input.Contains("reminder") || input.Contains("create task"))
-            {
-                return "Got it! Opening your Task Manager so you can add a task. 📝";
-            }
-            else if (input.Contains("show tasks") || input.Contains("view tasks"))
-            {
-                return "Opening your list of saved tasks. 📋";
-            }
-            else if (input.Contains("show log") || input.Contains("activity log"))
-            {
-                return "Opening your activity log to review previous actions. 📜";
-            }
 
-            // Sentiment fallback
+            if (input.Contains("add task") || input.Contains("reminder") || input.Contains("create task"))
+                return "Got it! Opening your Task Manager so you can add a task. 📝";
+
+            if (input.Contains("show tasks") || input.Contains("view tasks"))
+                return "Opening your list of saved tasks. 📋";
+
+            if (input.Contains("show log") || input.Contains("activity log"))
+                return "Opening your activity log to review previous actions. 📜";
+
+            // Sentiment/keyword fallback
             string sentiment = sentiment_detector.detectSentiment(input);
             if (sentiment == "Lets continue chatting & learning how to stay safe online ")
-            {
                 sentiment = keyword_recognition.checkKeyword(input);
-            }
 
             return sentiment;
         }
 
         private void AddUserMessage(string message)
         {
-            TextBlock text = new TextBlock
+            ChatPanel.Children.Add(new TextBlock
             {
                 Text = $"You: {message}",
                 Foreground = Brushes.White,
-                FontWeight = FontWeights.Bold,
-                Margin = new Thickness(5)
-            };
-            ChatPanel.Children.Add(text);
+                FontWeight = FontWeights.SemiBold,
+                Margin = new Thickness(5),
+                FontSize = 14
+            });
         }
 
         private async Task AddBotMessageWithTyping(string message)
@@ -82,8 +76,9 @@ namespace CyberSecurityChatbot
             TextBlock botText = new TextBlock
             {
                 Text = "Bot: ",
-                Foreground = Brushes.LightBlue,
-                Margin = new Thickness(5)
+                Foreground = Brushes.LightSkyBlue,
+                Margin = new Thickness(5),
+                FontSize = 14
             };
             ChatPanel.Children.Add(botText);
 
@@ -95,7 +90,6 @@ namespace CyberSecurityChatbot
             }
         }
 
-        // Helps update UI during typewriter effect
         private void DoEvents()
         {
             DispatcherFrame frame = new DispatcherFrame();
@@ -106,6 +100,13 @@ namespace CyberSecurityChatbot
                     return null;
                 }), frame);
             Dispatcher.PushFrame(frame);
+        }
+
+        private void BackToMain_Click(object sender, RoutedEventArgs e)
+        {
+            MainWindow main = new MainWindow();
+            main.Show();
+            this.Close();
         }
     }
 }
