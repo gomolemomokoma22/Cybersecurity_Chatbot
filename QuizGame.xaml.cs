@@ -9,11 +9,10 @@ namespace CyberSecurityChatbot
     {
         private class Question
         {
-            public string Text { get; set; } = string.Empty;
-            public List<string> Options { get; set; } = new List<string>();
+            public string Text { get; set; }
+            public List<string> Options { get; set; }
             public int CorrectIndex { get; set; }
         }
-
 
         private List<Question> quizQuestions = new List<Question>();
         private int currentQuestionIndex = 0;
@@ -58,7 +57,36 @@ namespace CyberSecurityChatbot
                 Options = new List<string> { "An email virus", "Software that protects data", "Malicious software", "Firewall hardware" },
                 CorrectIndex = 2
             });
-            // Add more questions as needed...
+            quizQuestions.Add(new Question
+            {
+                Text = "What is the safest type of network?",
+                Options = new List<string> { "Public Wi-Fi", "Wired network", "Unsecured Bluetooth", "Open hotspot" },
+                CorrectIndex = 1
+            });
+            quizQuestions.Add(new Question
+            {
+                Text = "Which one is a good cybersecurity practice?",
+                Options = new List<string> { "Clicking random links", "Sharing your passwords", "Updating software regularly", "Ignoring antivirus alerts" },
+                CorrectIndex = 2
+            });
+            quizQuestions.Add(new Question
+            {
+                Text = "Which tool scans your system for threats?",
+                Options = new List<string> { "Notepad", "Firewall", "Antivirus", "Paint" },
+                CorrectIndex = 2
+            });
+            quizQuestions.Add(new Question
+            {
+                Text = "Which of these is a phishing red flag?",
+                Options = new List<string> { "Greetings with your real name", "Professional grammar", "Urgent request for credentials", "Secure HTTPS site" },
+                CorrectIndex = 2
+            });
+            quizQuestions.Add(new Question
+            {
+                Text = "What's the best response to a suspicious email?",
+                Options = new List<string> { "Click the link to check", "Ignore and delete", "Forward it to friends", "Reply asking who it is" },
+                CorrectIndex = 1
+            });
         }
 
         private void DisplayQuestion()
