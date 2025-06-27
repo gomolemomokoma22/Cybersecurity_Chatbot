@@ -7,7 +7,6 @@ It serves as a digital assistant that educates users on cybersecurity awareness,
 
 This application was built as part of a software development portfolio project (Part 1, 2, and 3 combined) and showcases GUI design, chatbot logic, file handling, user memory, and simulated NLP behavior.
 
----
 
  Features
 
@@ -56,7 +55,7 @@ How to Run
 
 ---
 
-## 📌 Notes
+ Notes
 
 - All data (chat history, memory, tasks) is saved locally in `.txt` files.
 - The chatbot is not connected to any external AI service – all responses are simulated via keywords, memory, and conditions.
